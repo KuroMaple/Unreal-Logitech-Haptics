@@ -8,7 +8,7 @@ internal enum IconState
     Normal,
     /// <summary>The thing this action controls is currently on/selected (e.g. Rotate mode, grid snap on).</summary>
     Active,
-    /// <summary>Editor not reachable: greyed out with a red slash.</summary>
+    /// <summary>Editor not reachable: greyed out with a slash (same grey, so the icon stays monochrome).</summary>
     Offline,
 }
 
@@ -21,7 +21,9 @@ internal static class IconRenderer
     private const string NormalColor = "#FFFFFF";
     private const string ActiveColor = "#2FA8FF";
     private const string OfflineColor = "#5A5A5A";
-    private const string OfflineSlash = "<path d='M14 66 L66 14' stroke='#E0463A' stroke-width='7' stroke-linecap='round'/>";
+    // Every variant must stay monochrome: Options+ can only tint (recolor) single-color SVGs, and
+    // the icon editor captures whatever image is showing when the user customizes an action.
+    private const string OfflineSlash = "<path d='M14 66 L66 14' stroke='" + OfflineColor + "' stroke-width='7' stroke-linecap='round'/>";
 
     private static readonly ConcurrentDictionary<(string, IconState), BitmapImage> Cache = new();
 

@@ -2,7 +2,8 @@ namespace Loupedeck.UnrealMxBridge;
 
 /// <summary>
 /// Dial that moves the selected actors one grid step per detent along a world axis.
-/// Each detent plays a light haptic tick locally (no round trip), and the editor applies the
+/// Plays a haptic tick per dial event only while grid snap is on.
+/// The tick is raised locally (no round trip), and the editor applies the
 /// move as one undoable transaction per dial event.
 /// </summary>
 public abstract class NudgeAdjustment : PluginDynamicAdjustment
@@ -45,6 +46,12 @@ public abstract class NudgeAdjustment : PluginDynamicAdjustment
             return;
 
         Bridge.Send(_eventId, diff);
+
+        // Ticks mirror grid snapping: with snap off, nudging still moves by the grid size
+        // but stays silent, matching a free (unsnapped) drag.
+        if (!Bridge.Snapshot.GridEnabled)
+            return;
+
         try
         {
             this.Plugin.PluginEvents.RaiseEvent(TickWaveform);
