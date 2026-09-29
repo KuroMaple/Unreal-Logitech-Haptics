@@ -88,7 +88,7 @@ Options+ icon marketplace; see [docs/ring-profile.md](docs/ring-profile.md).
 | Live Coding patch applied | `completed` |
 | Live Coding ended without a patch (error, or no changes) | `mad` |
 | Blueprint compiled with errors | `mad` |
-| Package saved (coalesced, max once per second) | `jingle` |
+| Package saved (coalesced, max once per second) | `subtle_collision` (lightest) |
 | Lighting build succeeded / failed | `happy_alert` / `mad` |
 
 ## Protocol

@@ -37,7 +37,7 @@ noted in the icon editor.
 |---|---|---|
 | Play | `#3DDC84` green | Play, Simulate |
 | Stop | `#D93025` red | Stop |
-| Build | `#F9AB00` amber (`#FFB020` on Save All) | Live Coding, Compile Blueprints, Build Lighting, Save All |
+| Build | `#F9AB00` amber | Live Coding, Compile Blueprints, Build Lighting, Save All |
 | Transform | `#1A73E8` blue | Move, Rotate, Scale, World/Local, Grid Snap, Snap to Floor |
 | Nudge dials | X `#E5484D`, Y `#3DDC84`, Z `#1A73E8` (gizmo axis colors) | Nudge X / Y / Z |
 | Viewport | `#B78CFF` violet | Focus Selected, Isolate Selected, Bookmark 1, Game View, Lit, Unlit, Wireframe |
@@ -57,6 +57,12 @@ runtime icons, so the plugin's "active" / "not connected" states don't show on c
 **Recoloring:** Options+ can only tint a **monochrome** SVG. All plugin icons are single-color
 (including the "not connected" state). If an icon won't take a color, it was probably captured
 from an old two-color icon: reset it in the icon editor while Unreal is connected, then recolor it.
+
+## Applying the colors
+
+`scripts/apply-ring-colors.ps1` applies this scheme to every action on your ring: marketplace
+icons keep their image and get the group tint, plugin-glyph icons are re-rendered as clean
+monochrome SVGs. It restarts Logi Plugin Service while it writes.
 
 ## Updating the shipped profile
 

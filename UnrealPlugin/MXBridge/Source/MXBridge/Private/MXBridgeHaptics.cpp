@@ -15,7 +15,7 @@
 
 namespace
 {
-	// Save All writes many packages; coalesce them into one "jingle".
+	// Save All writes many packages; coalesce them into one tick.
 	constexpr double SaveHapticCooldownSeconds = 1.0;
 	constexpr int32 MaxWaitMs = 5000;
 }
@@ -163,7 +163,8 @@ void FMXBridgeHaptics::OnPackageSaved(const FString&, UPackage*, FObjectPostSave
 	if (Now - LastSaveHapticTime >= SaveHapticCooldownSeconds)
 	{
 		LastSaveHapticTime = Now;
-		Push(TEXT("jingle"), TEXT("file.save"));
+		// Saves are frequent, so use the lightest waveform rather than an attention-grabbing one.
+		Push(TEXT("subtle_collision"), TEXT("file.save"));
 	}
 }
 
