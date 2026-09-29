@@ -1,0 +1,45 @@
+# Unreal MX Bridge - Logi Actions SDK package manifest.
+# https://logitech.github.io/actions-sdk-docs/csharp/tutorial/plugin-structure
+
+type: plugin4
+
+# Must not end with "Plugin".
+name: UnrealMxBridge
+
+displayName: Unreal Engine
+
+description: >
+  Drive the Unreal Engine 5 editor from the MX Master 4 Actions Ring, with haptic
+  feedback for PIE, builds, saves and compile errors. Requires the MXBridge editor plugin.
+
+pluginFileName: UnrealMxBridgePlugin.dll
+
+version: 0.1.0
+
+author: KuroMaple
+
+copyright: Copyright (c) 2026 KuroMaple
+
+minimumLoupedeckVersion: 6.2
+
+pluginFolderWin: bin
+
+pluginFolderMac: bin
+
+# Action tile background (ARGB, #FF1A1A1A).
+backgroundColor: 4279900698
+
+supportedDevices:
+  - LoupedeckCtFamily
+  - LoupedeckExtendedFamily
+
+pluginCapabilities:
+  - HasHapticMapping
+
+license: MIT
+
+licenseUrl: https://github.com/KuroMaple/Unreal-Logitech-Haptics/blob/main/LICENSE
+
+homePageUrl: https://github.com/KuroMaple/Unreal-Logitech-Haptics
+
+supportPageUrl: https://github.com/KuroMaple/Unreal-Logitech-Haptics/issues

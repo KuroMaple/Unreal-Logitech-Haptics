@@ -1,0 +1,15 @@
+# Third-party repos cloned for study (see README "References")
+reference/
+
+# Unreal plugin build output
+UnrealPlugin/MXBridge/Binaries/
+UnrealPlugin/MXBridge/Intermediate/
+
+# .NET build output
+LogiPlugin/bin/
+LogiPlugin/**/obj/
+
+# IDEs
+.vs/
+.idea/
+*.user

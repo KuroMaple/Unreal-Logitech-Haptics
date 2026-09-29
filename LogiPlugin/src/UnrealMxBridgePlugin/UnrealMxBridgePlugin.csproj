@@ -1,0 +1,78 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Logi Plugin Service (Options+ 2026) runs on .NET 10 and PluginApi.dll references it. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Loupedeck.UnrealMxBridge</RootNamespace>
+    <AssemblyName>UnrealMxBridgePlugin</AssemblyName>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <Deterministic>true</Deterministic>
+    <!-- Match logiplugintool layout: DLL in bin/<Config>/bin/, metadata in bin/<Config>/metadata/ -->
+    <PluginBaseDir>$(MSBuildProjectDirectory)\..\..\bin\$(Configuration)\</PluginBaseDir>
+    <OutputPath>$(PluginBaseDir)bin\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <PluginShortName>UnrealMxBridge</PluginShortName>
+    <PluginDir Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(LOCALAPPDATA)\Logi\LogiPluginService\Plugins\</PluginDir>
+  </PropertyGroup>
+
+  <!--
+    PluginApi.dll ships with Logi Plugin Service (Logi Options+).
+    Override with: dotnet build -p:PluginApiPath="D:\path\PluginApi.dll"
+  -->
+  <Choose>
+    <When Condition="'$(PluginApiPath)' != ''">
+      <PropertyGroup>
+        <_ResolvedPluginApi>$(PluginApiPath)</_ResolvedPluginApi>
+      </PropertyGroup>
+    </When>
+    <When Condition="Exists('C:\Program Files\Logi\LogiPluginService\PluginApi.dll')">
+      <PropertyGroup>
+        <_ResolvedPluginApi>C:\Program Files\Logi\LogiPluginService\PluginApi.dll</_ResolvedPluginApi>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <_ResolvedPluginApi>$(LOCALAPPDATA)\Logi\LogiPluginService\PluginApi.dll</_ResolvedPluginApi>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <ItemGroup>
+    <Reference Include="PluginApi">
+      <HintPath>$(_ResolvedPluginApi)</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="EnsurePluginApi" BeforeTargets="CoreCompile" Condition="!Exists('$(_ResolvedPluginApi)')">
+    <Error Text="PluginApi.dll not found at '$(_ResolvedPluginApi)'. Install Logi Options+ or build with -p:PluginApiPath=&quot;path\PluginApi.dll&quot;." />
+  </Target>
+
+  <!-- Copy package/ (metadata, events) next to the bin folder. -->
+  <Target Name="CopyPackageMetadata" AfterTargets="PostBuildEvent">
+    <ItemGroup>
+      <PackageFiles Include="package\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PackageFiles)" DestinationFolder="$(PluginBaseDir)%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!--
+    Dev install: a .link file in the Logi Plugins folder points Logi Plugin Service at our build
+    output, then ask it to reload. Written with cmd echo so the file is ASCII, not UTF-16.
+  -->
+  <Target Name="CreatePluginDevLink" AfterTargets="CopyPackageMetadata" Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <PropertyGroup>
+      <_PluginBaseDirFull>$([System.IO.Path]::GetFullPath('$(PluginBaseDir)'))</_PluginBaseDirFull>
+    </PropertyGroup>
+    <MakeDir Directories="$(PluginDir)" Condition="!Exists('$(PluginDir)')" />
+    <Exec Command="echo $(_PluginBaseDirFull)&gt; &quot;$(PluginDir)$(MSBuildProjectName).link&quot;" />
+    <Message Text="Plugin dev link: $(PluginDir)$(MSBuildProjectName).link -> $(_PluginBaseDirFull)" Importance="High" />
+    <Exec Command="start loupedeck:plugin/$(PluginShortName)/reload" ContinueOnError="true" />
+  </Target>
+
+  <Target Name="PluginClean" AfterTargets="CoreClean">
+    <Delete Files="$(PluginDir)$(MSBuildProjectName).link" ContinueOnError="true" />
+  </Target>
+</Project>
