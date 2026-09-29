@@ -44,7 +44,11 @@ internal sealed class BridgeClient
         _timer = null;
     }
 
-    public void Send(string eventId)
+    /// <summary>
+    /// Posts one event. With <paramref name="relativeValue"/> it is a dial step
+    /// (kind "set_float", relative) instead of a button trigger.
+    /// </summary>
+    public void Send(string eventId, double? relativeValue = null)
     {
         var endpoint = this.Endpoint;
         if (endpoint == null)
@@ -58,11 +62,14 @@ internal sealed class BridgeClient
         {
             try
             {
-                var body = JsonSerializer.Serialize(new
+                var evt = new Dictionary<string, object> { ["id"] = eventId, ["kind"] = "trigger" };
+                if (relativeValue is { } value)
                 {
-                    schema = 1,
-                    events = new[] { new { id = eventId, kind = "trigger" } },
-                });
+                    evt["kind"] = "set_float";
+                    evt["value"] = value;
+                    evt["relative"] = true;
+                }
+                var body = JsonSerializer.Serialize(new { schema = 1, events = new[] { evt } });
                 using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(endpoint.BaseUri, "events"))
                 {
                     Content = new StringContent(body, Encoding.UTF8, "application/json"),

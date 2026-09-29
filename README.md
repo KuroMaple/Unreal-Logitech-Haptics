@@ -74,8 +74,9 @@ Options+ icon marketplace; see [docs/ring-profile.md](docs/ring-profile.md).
 |---|---|
 | Play | Play `pie.play`, Simulate `pie.simulate`, Stop `pie.stop` |
 | Build | Live Coding `build.livecoding`, Compile Blueprints `build.blueprint_compile`, Save All `file.save_all`, Build Lighting `build.lighting` |
-| Transform | Move / Rotate / Scale `transform.translate/rotate/scale`, World/Local `transform.toggle_space`, Grid Snap `snap.toggle_grid` |
-| Viewport | Focus Selected `viewport.focus_selected`, Game View `viewport.game_view`, Lit / Unlit / Wireframe `viewport.lit/unlit/wireframe` |
+| Transform | Move / Rotate / Scale `transform.translate/rotate/scale`, World/Local `transform.toggle_space`, Grid Snap `snap.toggle_grid`, Snap to Floor `actor.snap_to_floor` |
+| Transform (dials) | Nudge X / Y / Z `transform.nudge_x/y/z`: moves the selection one grid step per detent, one undo step per dial event, `subtle_collision` tick per detent |
+| Viewport | Focus Selected `viewport.focus_selected`, Game View `viewport.game_view`, Lit / Unlit / Wireframe `viewport.lit/unlit/wireframe`, Bookmark 1 `viewport.bookmark_1`, Isolate Selected `viewport.isolate_selected` |
 | Navigate | Content Browser `nav.content_browser`, Browse to Asset `nav.sync_browser`, Open Asset `nav.open_asset`, Output Log `nav.output_log` |
 
 ## Haptics
@@ -127,8 +128,7 @@ Every request needs the header `X-MXBridge-Token: <token>`, or it gets `401`.
 
 - Live Coding has no failure delegate, so "no changes" compiles also report `mad`.
 - Grid-snap ticks while dragging the gizmo (`subtle_collision`) are not implemented yet.
-- Actions currently only trigger; dial adjustments (e.g. nudging transforms, which would use
-  `FScopedTransaction` for undo) are future work.
+- Dial adjustments beyond Nudge X/Y/Z (rotation, grid size, timeline scrubbing) are future work.
 
 ## References
 

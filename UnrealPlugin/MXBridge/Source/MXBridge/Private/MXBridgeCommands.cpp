@@ -1,7 +1,9 @@
 #include "MXBridgeCommands.h"
 #include "MXBridgeModule.h"
 
+#include "Bookmarks/IBookmarkTypeTools.h"
 #include "Editor.h"
+#include "Editor/UnrealEdEngine.h"
 #include "EditorModeManager.h"
 #include "Engine/Blueprint.h"
 #include "Engine/Selection.h"
@@ -18,7 +20,9 @@
 #include "Modules/ModuleManager.h"
 #include "PlayInEditorDataTypes.h"
 #include "SLevelViewport.h"
+#include "ScopedTransaction.h"
 #include "Toolkits/GlobalEditorCommonCommands.h"
+#include "UnrealEdGlobals.h"
 #include "UObject/UObjectIterator.h"
 
 namespace
@@ -162,6 +166,44 @@ namespace
 		FLevelEditorActionCallbacks::LocationGridSnap_Clicked();
 	}
 
+	// ── Actor ──────────────────────────────────────────────────────────────
+
+	void SnapToFloor(const TSharedRef<FJsonObject>&)
+	{
+		// Same as the End key (creates its own undo transaction).
+		FLevelEditorActionCallbacks::SnapToFloor_Clicked(/*bAlign=*/ false, /*bUseLineTrace=*/ false, /*bUseBounds=*/ false, /*bUsePivot=*/ false);
+	}
+
+	void Nudge(const TSharedRef<FJsonObject>& Event, const FVector& Axis)
+	{
+		// Dial event: "value" is the number of detents turned (negative = backwards).
+		double Steps = 0.0;
+		if (!Event->TryGetNumberField(TEXT("value"), Steps) || Steps == 0.0)
+		{
+			return;
+		}
+
+		const TArray<AActor*> Actors = SelectedActors();
+		if (Actors.IsEmpty())
+		{
+			return;
+		}
+
+		// One undo step per dial event, covering every selected actor.
+		const FVector Delta = Axis * GEditor->GetGridSize() * Steps;
+		const FScopedTransaction Transaction(NSLOCTEXT("MXBridge", "NudgeActors", "MX Nudge Actors"));
+		for (AActor* Actor : Actors)
+		{
+			// ApplyDeltaToActor handles Modify(), attached children and PostEditMove, like a gizmo drag.
+			GEditor->ApplyDeltaToActor(Actor, /*bDelta=*/ true, &Delta, nullptr, nullptr);
+		}
+		GEditor->RedrawLevelEditingViewports();
+	}
+
+	void NudgeX(const TSharedRef<FJsonObject>& Event) { Nudge(Event, FVector::XAxisVector); }
+	void NudgeY(const TSharedRef<FJsonObject>& Event) { Nudge(Event, FVector::YAxisVector); }
+	void NudgeZ(const TSharedRef<FJsonObject>& Event) { Nudge(Event, FVector::ZAxisVector); }
+
 	// ── Viewport ───────────────────────────────────────────────────────────
 
 	void FocusSelected(const TSharedRef<FJsonObject>&)
@@ -188,6 +230,42 @@ namespace
 			FLevelEditorViewportClient& Client = Viewport->GetLevelViewportClient();
 			Client.SetViewMode(Mode);
 			Client.Invalidate();
+		}
+	}
+
+	void JumpToBookmark1(const TSharedRef<FJsonObject>&)
+	{
+		// Same as pressing 1 in the viewport (bookmark set with Ctrl+1).
+		if (TSharedPtr<SLevelViewport> Viewport = LevelEditor().GetFirstActiveLevelViewport())
+		{
+			FLevelEditorViewportClient& Client = Viewport->GetLevelViewportClient();
+			IBookmarkTypeTools& Bookmarks = IBookmarkTypeTools::Get();
+			if (Bookmarks.CheckBookmark(1, &Client))
+			{
+				Bookmarks.JumpToBookmark(1, nullptr, &Client);
+			}
+			else
+			{
+				UE_LOG(LogMXBridge, Log, TEXT("MXBridge: no camera bookmark 1 (set one with Ctrl+1)"));
+			}
+		}
+	}
+
+	void ToggleIsolateSelected(const TSharedRef<FJsonObject>&)
+	{
+		// Toggle between "hide everything except the selection" and "show all".
+		// The edact* functions create their own undo transactions.
+		static bool bIsolated = false;
+		UWorld* World = GEditor->GetEditorWorldContext().World();
+		if (bIsolated)
+		{
+			GUnrealEd->edactUnHideAll(World);
+			bIsolated = false;
+		}
+		else if (!SelectedActors().IsEmpty())
+		{
+			GUnrealEd->edactHideUnselected(World);
+			bIsolated = true;
 		}
 	}
 
@@ -241,12 +319,19 @@ namespace
 			{ TEXT("transform.scale"),          &TransformScale },
 			{ TEXT("transform.toggle_space"),   &ToggleSpace },
 			{ TEXT("snap.toggle_grid"),         &ToggleGridSnap },
+			{ TEXT("transform.nudge_x"),        &NudgeX },
+			{ TEXT("transform.nudge_y"),        &NudgeY },
+			{ TEXT("transform.nudge_z"),        &NudgeZ },
+
+			{ TEXT("actor.snap_to_floor"),      &SnapToFloor },
 
 			{ TEXT("viewport.focus_selected"),  &FocusSelected },
 			{ TEXT("viewport.game_view"),       &ToggleGameView },
 			{ TEXT("viewport.lit"),             &ViewLit },
 			{ TEXT("viewport.unlit"),           &ViewUnlit },
 			{ TEXT("viewport.wireframe"),       &ViewWireframe },
+			{ TEXT("viewport.bookmark_1"),      &JumpToBookmark1 },
+			{ TEXT("viewport.isolate_selected"), &ToggleIsolateSelected },
 
 			{ TEXT("nav.content_browser"),      &OpenContentBrowser },
 			{ TEXT("nav.sync_browser"),         &SyncBrowser },

@@ -52,7 +52,16 @@ public sealed class ToggleGridSnapCommand() : UnrealCommand(
     "snap.toggle_grid", "Grid Snap", "Toggle location grid snapping", "Transform", Glyphs.Grid,
     s => s.GridEnabled);
 
+public sealed class SnapToFloorCommand() : UnrealCommand(
+    "actor.snap_to_floor", "Snap to Floor", "Drop the selected actors onto the surface below (End)", "Transform", Glyphs.SnapToFloor);
+
 // ── Viewport ────────────────────────────────────────────────────────────────
+
+public sealed class Bookmark1Command() : UnrealCommand(
+    "viewport.bookmark_1", "Bookmark 1", "Jump to camera bookmark 1 (set with Ctrl+1)", "Viewport", Glyphs.Bookmark);
+
+public sealed class IsolateSelectedCommand() : UnrealCommand(
+    "viewport.isolate_selected", "Isolate Selected", "Hide everything except the selection; press again to show all", "Viewport", Glyphs.Isolate);
 
 public sealed class FocusSelectedCommand() : UnrealCommand(
     "viewport.focus_selected", "Focus Selected", "Frame the selection (F)", "Viewport", Glyphs.Focus);

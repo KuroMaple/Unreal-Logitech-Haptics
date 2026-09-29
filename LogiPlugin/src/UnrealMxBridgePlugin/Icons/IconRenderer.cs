@@ -62,11 +62,17 @@ internal static class Glyphs
     public const string Rotate = "<path d='M62 40 A22 22 0 1 1 52 21'/><path d='M40 14 L53 20 L47 33'/>";
     public const string Scale = "<rect x='14' y='38' width='28' height='28'/><path d='M36 44 L64 16 M46 16 H64 V34'/>";
     public const string Space = "<circle cx='40' cy='40' r='26'/><ellipse cx='40' cy='40' rx='11' ry='26'/><path d='M14 40 H66'/>";
-    public const string Grid = "<path d='M14 14 V66 M31 14 V66 M49 14 V66 M66 14 V66 M14 14 H66 M14 31 H66 M14 49 H66 M14 66 H66' stroke-width='4'/>";
+    public const string SnapToFloor = "<rect x='26' y='10' width='28' height='24' rx='2'/><path d='M40 40 V56 M32 48 L40 56 L48 48 M12 68 H68'/>";
+    public const string NudgeX = "<path d='M10 40 H70 M10 40 L20 30 M10 40 L20 50 M70 40 L60 30 M70 40 L60 50'/>";
+    public const string NudgeY = "<path d='M16 64 L64 16 M64 16 H48 M64 16 V32 M16 64 H32 M16 64 V48'/>";
+    public const string NudgeZ = "<path d='M40 10 V70 M40 10 L30 20 M40 10 L50 20 M40 70 L30 60 M40 70 L50 60'/>";
+    public const string Grid ="<path d='M14 14 V66 M31 14 V66 M49 14 V66 M66 14 V66 M14 14 H66 M14 31 H66 M14 49 H66 M14 66 H66' stroke-width='4'/>";
 
     public const string Focus = "<circle cx='40' cy='40' r='18'/><circle cx='40' cy='40' r='4' fill='C'/><path d='M40 10 V22 M40 58 V70 M10 40 H22 M58 40 H70'/>";
     public const string GameView = "<path d='M8 40 Q40 10 72 40 Q40 70 8 40 Z'/><circle cx='40' cy='40' r='9' fill='C'/>";
-    public const string Lit = "<circle cx='40' cy='40' r='12' fill='C'/><path d='M40 10 V19 M40 61 V70 M10 40 H19 M61 40 H70 M19 19 L25 25 M55 55 L61 61 M61 19 L55 25 M25 55 L19 61'/>";
+    public const string Bookmark = "<path d='M24 10 H56 V70 L40 56 L24 70 Z'/>";
+    public const string Isolate = "<circle cx='40' cy='40' r='11' fill='C'/><circle cx='40' cy='40' r='28' stroke-dasharray='9 8'/>";
+    public const string Lit ="<circle cx='40' cy='40' r='12' fill='C'/><path d='M40 10 V19 M40 61 V70 M10 40 H19 M61 40 H70 M19 19 L25 25 M55 55 L61 61 M61 19 L55 25 M25 55 L19 61'/>";
     public const string Unlit = "<circle cx='40' cy='40' r='22'/><path d='M40 18 A22 22 0 0 1 40 62 Z' fill='C'/>";
     public const string Wireframe = "<path d='M18 26 L40 14 L62 26 V54 L40 66 L18 54 Z M18 26 L40 38 L62 26 M40 38 V66'/>";
 
