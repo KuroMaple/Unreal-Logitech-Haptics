@@ -8,7 +8,6 @@ public abstract class UnrealCommand : PluginDynamicCommand
 {
     private readonly string _eventId;
     private readonly string _glyph;
-    private readonly string _color;
     private readonly Func<ContextSnapshot, bool>? _isActive;
 
     private protected UnrealCommand(
@@ -17,21 +16,12 @@ public abstract class UnrealCommand : PluginDynamicCommand
         string description,
         string group,
         string glyph,
-        Func<ContextSnapshot, bool>? isActive = null,
-        string? color = null)
+        Func<ContextSnapshot, bool>? isActive = null)
         : base(displayName, description, group)
     {
         _eventId = eventId;
         _glyph = glyph;
         _isActive = isActive;
-        _color = color ?? group switch
-        {
-            "Play" => GroupColors.Play,
-            "Build" => GroupColors.Build,
-            "Transform" => GroupColors.Transform,
-            "Viewport" => GroupColors.Viewport,
-            _ => GroupColors.Navigate,
-        };
     }
 
     private static BridgeClient Bridge => UnrealMxBridgePlugin.Bridge;
@@ -57,6 +47,6 @@ public abstract class UnrealCommand : PluginDynamicCommand
         var state = !Bridge.IsConnected ? IconState.Offline
             : _isActive?.Invoke(Bridge.Snapshot) == true ? IconState.Active
             : IconState.Normal;
-        return IconRenderer.Render(_glyph, _color, state);
+        return IconRenderer.Render(_glyph, state);
     }
 }

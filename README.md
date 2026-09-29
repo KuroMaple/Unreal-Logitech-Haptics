@@ -53,8 +53,8 @@ at `LogiPlugin\bin\Debug\` and asks Logi Plugin Service to reload. Nothing else 
 ### 3. Assign actions in Logi Options+
 
 The plugin ships a default Actions Ring layout (`package/profiles/DefaultProfile72.lp5`) that
-Logi applies when it first creates the **Unreal Engine** app profile: Play, Stop, Save All,
-Live Coding, Move, Rotate, Scale, Focus Selected.
+Logi applies when it first creates the **Unreal Engine** app profile: Focus Selected, Play, Save All,
+Live Coding, Grid Snap, Content Browser, Browse to Asset, Stop.
 
 To customize: Logi Options+ → MX Master 4 → **Unreal Engine** profile → **Actions Ring**. All 21
 actions are under **Unreal Engine**, grouped as Play, Build, Transform, Viewport and Navigate.
@@ -63,9 +63,10 @@ actions are under **Unreal Engine**, grouped as Play, Build, Transform, Viewport
 > Delete `%LOCALAPPDATA%\Logi\LogiPluginService\Applications\Loupedeck72\@_unrealmxbridge`
 > and rebuild/reload the plugin, or drag actions onto the ring in Options+.
 
-Icons are colored by group: Play **green** (Stop **red**), Build **amber**, Transform **blue**,
-Viewport **violet**, Navigate **teal**. A **filled circle** behind the icon means currently active
-(e.g. Rotate mode, grid snap on, Lit view); **grey with a red slash** means the editor is not connected.
+The plugin's own icons show state: **white** = normal, **blue** = currently active (e.g. Rotate mode,
+grid snap on, Lit view), **grey with a red slash** = editor not connected. Icons customized in the
+Options+ icon editor replace these. The shipped ring uses custom, color-coded icons, mostly from the
+Options+ icon marketplace; see [docs/ring-profile.md](docs/ring-profile.md).
 
 ## Actions
 

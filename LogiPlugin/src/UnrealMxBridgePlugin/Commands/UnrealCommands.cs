@@ -14,8 +14,7 @@ public sealed class PieSimulateCommand() : UnrealCommand(
     s => s.IsSimulating);
 
 public sealed class PieStopCommand() : UnrealCommand(
-    "pie.stop", "Stop", "Stop Play / Simulate", "Play", Glyphs.Stop,
-    color: GroupColors.Stop);
+    "pie.stop", "Stop", "Stop Play / Simulate", "Play", Glyphs.Stop);
 
 // ── Build ───────────────────────────────────────────────────────────────────
 

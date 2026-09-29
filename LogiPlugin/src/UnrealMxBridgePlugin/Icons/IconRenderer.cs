@@ -13,47 +13,30 @@ internal enum IconState
 }
 
 /// <summary>
-/// Ring colors per action group. Chosen to stay distinct on the dark tile background; Play/Stop
-/// also differ by shape, so red vs green is never the only cue.
-/// </summary>
-internal static class GroupColors
-{
-    public const string Play = "#3DDC84";      // green
-    public const string Stop = "#FF5A5F";      // red (Stop only)
-    public const string Build = "#FFB020";     // amber
-    public const string Transform = "#4DA3FF"; // blue
-    public const string Viewport = "#B78CFF";  // violet
-    public const string Navigate = "#2EC4B6";  // teal
-}
-
-/// <summary>
 /// Builds action icons from small inline SVG glyphs (80x80 viewBox, stroke-based, "C" = color).
-/// Rendering at runtime lets one glyph produce the normal / active / offline variants:
-///   Normal  - glyph in the group color
-///   Active  - dark glyph on a filled circle of the group color
-///   Offline - grey glyph with a red slash
+/// Rendering at runtime lets one glyph produce the normal / active / offline variants.
 /// </summary>
 internal static class IconRenderer
 {
-    private const string ActiveGlyphColor = "#1A1A1A"; // matches the tile background
+    private const string NormalColor = "#FFFFFF";
+    private const string ActiveColor = "#2FA8FF";
     private const string OfflineColor = "#5A5A5A";
     private const string OfflineSlash = "<path d='M14 66 L66 14' stroke='#E0463A' stroke-width='7' stroke-linecap='round'/>";
 
-    private static readonly ConcurrentDictionary<(string, string, IconState), BitmapImage> Cache = new();
+    private static readonly ConcurrentDictionary<(string, IconState), BitmapImage> Cache = new();
 
-    public static BitmapImage Render(string glyph, string groupColor, IconState state) =>
-        Cache.GetOrAdd((glyph, groupColor, state), static key =>
+    public static BitmapImage Render(string glyph, IconState state) =>
+        Cache.GetOrAdd((glyph, state), static key =>
         {
-            var (glyph, groupColor, state) = key;
+            var (glyph, state) = key;
             var color = state switch
             {
-                IconState.Active => ActiveGlyphColor,
+                IconState.Active => ActiveColor,
                 IconState.Offline => OfflineColor,
-                _ => groupColor,
+                _ => NormalColor,
             };
             var svg =
                 "<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'>" +
-                (state == IconState.Active ? $"<circle cx='40' cy='40' r='39' fill='{groupColor}'/>" : "") +
                 $"<g fill='none' stroke='{color}' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'>" +
                 glyph.Replace("'C'", $"'{color}'") +
                 "</g>" +
