@@ -52,10 +52,16 @@ at `LogiPlugin\bin\Debug\` and asks Logi Plugin Service to reload. Nothing else 
 
 ### 3. Assign actions in Logi Options+
 
-1. Logi Options+ → MX Master 4 → add an app-specific profile for **Unreal Editor**.
-2. Open the **Actions Ring** settings. The plugin's actions appear under **Unreal Engine**,
-   grouped as Play, Build, Transform, Viewport and Navigate.
-3. Drag the actions you want onto the ring.
+The plugin ships a default Actions Ring layout (`package/profiles/DefaultProfile72.lp5`) that
+Logi applies when it first creates the **Unreal Engine** app profile: Play, Stop, Save All,
+Live Coding, Move, Rotate, Scale, Focus Selected.
+
+To customize: Logi Options+ → MX Master 4 → **Unreal Engine** profile → **Actions Ring**. All 21
+actions are under **Unreal Engine**, grouped as Play, Build, Transform, Viewport and Navigate.
+
+> If the ring is blank in Unreal, an empty profile was created before the default existed.
+> Delete `%LOCALAPPDATA%\Logi\LogiPluginService\Applications\Loupedeck72\@_unrealmxbridge`
+> and rebuild/reload the plugin, or drag actions onto the ring in Options+.
 
 Icons show state: **white** = normal, **blue** = currently active (e.g. Rotate mode, grid snap on,
 Lit view), **grey with a red slash** = editor not connected.
