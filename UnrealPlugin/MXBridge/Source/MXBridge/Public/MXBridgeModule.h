@@ -4,6 +4,7 @@
 #include "Modules/ModuleInterface.h"
 
 class FMXBridgeServer;
+class FMXBridgeViewportScroll;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogMXBridge, Log, All);
 
@@ -15,4 +16,5 @@ public:
 
 private:
 	TUniquePtr<FMXBridgeServer> Server;
+	TUniquePtr<FMXBridgeViewportScroll> ViewportScroll;
 };

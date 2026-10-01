@@ -79,6 +79,21 @@ Options+ icon marketplace; see [docs/ring-profile.md](docs/ring-profile.md).
 | Viewport | Focus Selected `viewport.focus_selected`, Game View `viewport.game_view`, Lit / Unlit / Wireframe `viewport.lit/unlit/wireframe`, Bookmark 1 `viewport.bookmark_1`, Isolate Selected `viewport.isolate_selected` |
 | Navigate | Content Browser `nav.content_browser`, Browse to Asset `nav.sync_browser`, Open Asset `nav.open_asset`, Output Log `nav.output_log` |
 
+## Viewport navigation with the thumb wheel
+
+Unreal ignores the horizontal mouse wheel. MXBridge hooks it so the MX Master thumb wheel pans the
+perspective viewport under the cursor (no Logi configuration needed; leave the thumb wheel on its
+default horizontal scroll):
+
+| Movement | Mouse |
+|---|---|
+| Forward / back | Vertical wheel (built into Unreal) |
+| Left / right | Thumb wheel |
+| Up / down | Shift + thumb wheel |
+
+Pan distance scales with the viewport camera speed (right-click + vertical wheel changes it).
+Disabled while playing in the viewport; orthographic views are not affected.
+
 ## Haptics
 
 | Editor event | Waveform |

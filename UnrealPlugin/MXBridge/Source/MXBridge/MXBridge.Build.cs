@@ -19,6 +19,7 @@ public class MXBridge : ModuleRules
 			"LevelEditor",  // active level viewport
 			"Slate",
 			"SlateCore",
+			"ApplicationCore", // FWindowsApplication message hook (horizontal wheel)
 			"HTTPServer",   // FHttpServerModule
 			"Json",
 			"LiveCoding",   // ILiveCodingModule (Win64 only, matching the .uplugin allow list)
